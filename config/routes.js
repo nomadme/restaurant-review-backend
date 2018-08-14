@@ -32,9 +32,10 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  // '/': {
-  //   view: 'homepage'
-  // }
+  '/': { view: 'home' },
+  '/all': 'RestaurantsController.main' ,
+  '/list': 'RestaurantsController.list',
+  '/restaurants/*': 'RestaurantsController.get'
 
   /***************************************************************************
   *                                                                          *

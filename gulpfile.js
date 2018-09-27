@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var imageResize = require('gulp-image-resize');
 var rename = require('gulp-rename');
 var watch = require('gulp-watch');
+var babel = require('gulp-babel');
 
 const presets = [
   {name: '_1x', width: 340},
@@ -23,12 +24,18 @@ gulp.task('image-resize', function () {
 });
 
 gulp.task('default', function () {
-  gulp.src('./assets/**/*')
+  return gulp.src('./assets/**/*')
     .pipe(gulp.dest('.tmp/public/'))
+});
+
+gulp.task('compile', function () {
+  return gulp.src('./assets/sw.js')
+    .pipe(babel())
+    .pipe(gulp.dest('.tmp/public'))
 });
 
 gulp.task('watch', function () {
   return gulp.src('./assets/**/*')
-    .pipe(watch('./assets/**/*.js'))
+    .pipe(watch('./assets/**/*'))
     .pipe(gulp.dest('.tmp/public/'))
 });

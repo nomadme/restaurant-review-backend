@@ -4,10 +4,27 @@
 class DBHelper {
 
   /**
+   * Database URL.
+   * Change this to restaurants.json file location on your server.
+   */
+  static get DATABASE_URL() {
+    const port = 1337; // Change this to your server port
+    return `http://localhost:${port}/restaurants`;
+  }
+
+  /**
    * Fetch all restaurants.
    */
-  static fetchRestaurants(callback) {
-    fetch('http://localhost:1337/list')
+  static fetchRestaurants(callback, id) {
+    let fetchURL;
+
+    if (!id) {
+      fetchURL = DBHelper.DATABASE_URL;
+    } else {
+      fetchURL = DBHelper.DATABASE_URL + '/' + id;
+    }
+
+    fetch(DBHelper.DATABASE_URL, {method: 'GET'})
       .then(response => {
         return response.json();
       })
@@ -139,7 +156,7 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+    return (`/img/${restaurant.id}`);
   }
 
   /**

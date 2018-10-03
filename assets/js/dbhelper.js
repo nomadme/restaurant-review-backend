@@ -26,7 +26,16 @@ class DBHelper {
 
     fetch(DBHelper.DATABASE_URL, {method: 'GET'})
       .then(response => {
-        return response.json();
+        // save all data to db
+        response.json().then(values => {
+          values.forEach(function (data) {
+            DBHelper.queryDB().set(data.id, data)
+          })
+        });
+
+        return DBHelper.queryDB().getAll().then(allObjs => {
+          return allObjs;
+        })
       })
       .then(res => {
         callback(null, res);
@@ -149,7 +158,7 @@ class DBHelper {
    * Restaurant page URL.
    */
   static urlForRestaurant(restaurant) {
-    return (`./restaurants/${restaurant.id}`);
+    return (`./restaurant.html?id=${restaurant.id}`);
   }
 
   /**
@@ -171,6 +180,75 @@ class DBHelper {
       animation: google.maps.Animation.DROP}
     );
     return marker;
+  }
+
+  /**
+   * @description Handle IndexDB
+   * @type {Promise<DB>}
+   */
+  static startDB() {
+    const dbPromise = idb.open('restaurants-data', 1, upgradeDB => {
+      upgradeDB.createObjectStore('restaurants');
+    });
+
+    return dbPromise;
+  }
+
+  static queryDB(){
+    const database = {
+      getAll() {
+        return DBHelper.startDB().then(db => {
+          return db.transaction('restaurants')
+            .objectStore('restaurants').getAll();
+        })
+      },
+      get(key) {
+        return DBHelper.startDB().then(db => {
+          return db.transaction('restaurants')
+            .objectStore('restaurants').get(key);
+        });
+      },
+      set(key, val) {
+        return DBHelper.startDB().then(db => {
+          const tx = db.transaction('restaurants', 'readwrite');
+          tx.objectStore('restaurants').put(val, key);
+          return tx.complete;
+        });
+      },
+      delete(key) {
+        return DBHelper.startDB().then(db => {
+          const tx = db.transaction('restaurants', 'readwrite');
+          tx.objectStore('restaurants').delete(key);
+          return tx.complete;
+        });
+      },
+      clear() {
+        return DBHelper.startDB().then(db => {
+          const tx = db.transaction('restaurants', 'readwrite');
+          tx.objectStore('restaurants').clear();
+          return tx.complete;
+        });
+      },
+      keys() {
+        return DBHelper.startDB().then(db => {
+          const tx = db.transaction('restaurants');
+          const keys = [];
+          const store = tx.objectStore('restaurants');
+
+          // This would be store.getAllKeys(), but it isn't supported by Edge or Safari.
+          // openKeyCursor isn't supported by Safari, so we fall back
+          (store.iterateKeyCursor || store.iterateCursor).call(store, cursor => {
+            if (!cursor) return;
+            keys.push(cursor.key);
+            cursor.continue();
+          });
+
+          return tx.complete.then(() => keys);
+        });
+      }
+    };
+
+    return database;
   }
 
 }

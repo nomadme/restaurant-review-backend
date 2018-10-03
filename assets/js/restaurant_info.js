@@ -169,20 +169,14 @@ fillBreadcrumb = (restaurant = self.restaurant) => {
  * @return {*}
  */
 getParameterByName = (name, url) => {
-  if (!url)
-    url = window.location.href;
+  if (!url) url = window.location.href;
 
   name = name.replace(/[\[\]]/g, '\\$&');
 
   const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
-  console.log(url, 'hello', regex);
-  // const regex = new RegExp(`re`);
-    results = regex.exec(url);
-  console.log(results, name, url, regex.exec(url));
-  return 2;
-  if (!results)
-    return null;
-  if (!results[2])
-    return '';
+  let results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
-}
+};

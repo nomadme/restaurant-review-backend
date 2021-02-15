@@ -19,6 +19,7 @@ Local server
 - [Brandy Lee Camacho - Technical Project Manager](mailto:brandy.camacho@udacity.com)
 - [David Harris - Web Services Lead](mailto:david.harris@udacity.com)
 - [Omar Albeik - Frontend engineer](mailto:omaralbeik@gmail.com)
+- [Ganbayar Gansukh - Fullstack engineer](mailto:ganbaa.g.86@gmail.com)
 
 ## Getting Started
 
@@ -46,7 +47,3 @@ Let's start with running commands in your terminal, known as command line interf
 ### You should now have access to your API server environment
 debug: Environment : development
 debug: Port        : 1337
-
-
-If you find a bug in the source code or a mistake in the documentation, you can help us by
-submitting an issue to our [Waffle Dashboard](https://waffle.io/udacity/mwnd-issues). Even better you can submit a Pull Request with a fix :)
